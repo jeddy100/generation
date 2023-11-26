@@ -19,7 +19,7 @@ public class Main {
 //                CodeGenerator.generateJavaRepository(tableName.get(i));
 //                CodeGenerator.generateJavaService(tableName.get(i));
 //                CodeGenerator.generateJavaController(tableName.get(i));
-                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".net","Net-template.ftl");
+                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".java","class-template.ftl");
 
             }
         } catch (SQLException e) {
