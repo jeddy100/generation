@@ -1,0 +1,11 @@
+using System;
+namespace model_genere;
+{
+
+    public class Essai {
+
+            public int column_name { get; set; }
+
+
+    }
+}

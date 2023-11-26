@@ -1,0 +1,12 @@
+using System;
+namespace model_genere;
+{
+
+    public class Test {
+
+            public String colonne1 { get; set; }
+            public int colonne2 { get; set; }
+
+
+    }
+}
