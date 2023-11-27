@@ -98,8 +98,11 @@ public class CodeGenerator {
                 return "int";
             case "varchar":
                 return "String";
+            case "double precision":
             case "double":
                 return"double";
+            case "timestamp":
+                return"timestamp";
             // Ajoutez d'autres cas selon vos besoins
             default:
                 return "Object"; // Ou ajustez selon votre logique
