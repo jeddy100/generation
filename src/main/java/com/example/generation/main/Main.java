@@ -19,6 +19,8 @@ public class Main {
 //                CodeGenerator.generateJavaRepository(tableName.get(i));
 //                CodeGenerator.generateJavaService(tableName.get(i));
 //                CodeGenerator.generateJavaController(tableName.get(i));
+
+
                 //generation template java
                 CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".java","class-template.ftl");
                 ///generation template .net

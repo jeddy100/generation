@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.generation.json.Type;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -102,7 +103,9 @@ public class CodeGenerator {
             case "double":
                 return"double";
             case "timestamp":
-                return"timestamp";
+                return"Timestamp";
+            case"date":
+                return "Date";
             // Ajoutez d'autres cas selon vos besoins
             default:
                 return "Object"; // Ou ajustez selon votre logique
@@ -205,8 +208,8 @@ public class CodeGenerator {
         for (int i = 0; i < columns.size(); i++) {
             String columnName = columns.get(i);
             String columnType = columnTypes.get(i);
-
-            ColumnInfo columnInfo = new ColumnInfo(columnName, mapColumnType(columnType));
+            String mapedValue=mapColumnType(columnType);
+            ColumnInfo columnInfo = new ColumnInfo(columnName, mapedValue, Type.GetTypes().get(mapedValue));
             columnInfoList.add(columnInfo);
         }
 
