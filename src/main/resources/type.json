@@ -1,0 +1,7 @@
+{
+  "int":"",
+  "double": "",
+  "Date": "java.sql.Date",
+  "Timestamp": "java.sql.Timestamp",
+  "String": ""
+}

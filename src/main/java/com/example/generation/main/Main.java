@@ -22,9 +22,10 @@ public class Main {
 
 
                 //generation template java
-//                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".java","class-template.ftl");
-                ///generation template .net
-                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".cs","Net-template.ftl");
+                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".java","class-template.ftl");
+                ///generation template .net.
+//                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".cs","Net-template.ftl");
+
 
             }
         } catch (SQLException e) {
