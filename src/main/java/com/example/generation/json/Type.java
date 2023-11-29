@@ -15,7 +15,7 @@ public class Type {
     public static Map<String,String> GetTypes(){
         Map<String,String> listType=new HashMap<>();
         try {
-            String jsonFilePath = "src/main/resources/type.json";
+            String jsonFilePath = "C:/Users/Jeddy/IdeaProjects/GenerationCode/generation/src/main/resources/type.json";
             Gson gson = new Gson();
             java.lang.reflect.Type type = new TypeToken<Map<String, String>>() {
             }.getType();

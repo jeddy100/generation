@@ -7,7 +7,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
+    private static String[] arguments;
+
     public static void main(String[] args) {
+        arguments = args;
+
+
+
         try {
 
             DatabaseMetaDataReader.readDatabaseMetadata();
@@ -19,10 +25,9 @@ public class Main {
 //                CodeGenerator.generateJavaRepository(tableName.get(i));
 //                CodeGenerator.generateJavaService(tableName.get(i));
 //                CodeGenerator.generateJavaController(tableName.get(i));
-
-
                 //generation template java
-                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".java","class-template.ftl");
+                System.out.println(args[3]);
+                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,args[0],args[1]);
                 ///generation template .net.
 //                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".cs","Net-template.ftl");
 
@@ -31,5 +36,8 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public static String[] getArguments() {
+        return arguments;
     }
 }

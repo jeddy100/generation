@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.generation.json.Type;
+import com.example.generation.main.Main;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -21,7 +22,7 @@ public class CodeGenerator {
     private static final String GENERATED_PACKAGE_REPOSITORY = "repository_genere";
     private static final String GENERATED_PACKAGE_SERVICE= "service_genere";
     private static final String GENERATED_PACKAGE_CONTROLLER= "controller_genere";
-
+    String [] args=Main.getArguments();
 
 
 
@@ -194,8 +195,10 @@ public class CodeGenerator {
 
 
         try {
+            String [] args=Main.getArguments();
+
             Template template = cfg.getTemplate(templateUsed);
-            String outputPath = GENERATED_PACKAGE + File.separator + tableNameToClassName(tableName) + typeFile;
+            String outputPath = args[3]+GENERATED_PACKAGE + File.separator + tableNameToClassName(tableName) + typeFile;
             writeToFiletemplate(outputPath, template, templateData);
             System.out.println(typeFile+" class written to file: " + outputPath);
         } catch (IOException | TemplateException e) {
@@ -217,7 +220,8 @@ public class CodeGenerator {
     }
     private static void writeToFiletemplate(String outputPath, Template template, Map<String, Object> templateData)
             throws IOException, TemplateException {
-        File packageDirectory = new File(GENERATED_PACKAGE);
+        String [] args=Main.getArguments();
+        File packageDirectory = new File(args[3],GENERATED_PACKAGE);
         if (!packageDirectory.exists()) {
             packageDirectory.mkdir();
         }
