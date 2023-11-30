@@ -198,7 +198,7 @@ public class CodeGenerator {
             String [] args=Main.getArguments();
 
             Template template = cfg.getTemplate(templateUsed);
-            String outputPath = args[3]+GENERATED_PACKAGE + File.separator + tableNameToClassName(tableName) + typeFile;
+            String outputPath = args[7]+GENERATED_PACKAGE + File.separator + tableNameToClassName(tableName) + typeFile;
             writeToFiletemplate(outputPath, template, templateData);
             System.out.println(typeFile+" class written to file: " + outputPath);
         } catch (IOException | TemplateException e) {
@@ -221,7 +221,7 @@ public class CodeGenerator {
     private static void writeToFiletemplate(String outputPath, Template template, Map<String, Object> templateData)
             throws IOException, TemplateException {
         String [] args=Main.getArguments();
-        File packageDirectory = new File(args[3],GENERATED_PACKAGE);
+        File packageDirectory = new File(args[7],GENERATED_PACKAGE);
         if (!packageDirectory.exists()) {
             packageDirectory.mkdir();
         }

@@ -9,9 +9,9 @@ import java.sql.SQLException;
 public class ConnexionBase {
     public static Connection connect() throws SQLException {
         String [] args= Main.getArguments();
-        String url = "jdbc:postgresql://localhost:5432/"+args[2];
-        String user= "postgres";
-        String password= "1234";
+        String url = "jdbc:postgresql://"+args[5]+":"+args[6]+"/"+args[2];
+        String user= args[3];
+        String password= args[4];
         return DriverManager.getConnection(url,user,password);
 
 

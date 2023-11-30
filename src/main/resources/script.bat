@@ -14,7 +14,11 @@ set "param3=valeur3"
 set "templatejava=class-template.ftl"
 set "templateNet=Net-template.ftl"
 set "output=C:\\"
+set "user=postgres"
+set "password=1234"
+set "port=5432"
+set "host=localhost"
 rem Appeler le fichier JAR
-%javaCmd% -jar %jarPath% %typefileNet% %templateNet% %database% %output%
+%javaCmd% -jar %jarPath% %typefileNet% %templateNet% %database% %user% %password% %host% %port% %output%
 
 endlocal
