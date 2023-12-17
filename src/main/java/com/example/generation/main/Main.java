@@ -1,6 +1,7 @@
 package com.example.generation.main;
 
 import com.example.generation.generation.CodeGenerator;
+import com.example.generation.generation.ColumnInfo;
 import com.example.generation.generation.DatabaseMetaDataReader;
 
 import java.sql.SQLException;
@@ -27,7 +28,9 @@ public class Main {
 //                CodeGenerator.generateJavaController(tableName.get(i));
                 //generation template java
                 System.out.println(args[3]);
-                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,args[0],args[1]);
+                List<ColumnInfo> columnInfoList = CodeGenerator.createColumnInfoList(colonnes, colonnesType);
+                //CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,args[0],args[1]);
+                CodeGenerator.generateJavaClassesTemplate2(tableName.get(i),columnInfoList,args[1],args[0]);
                 ///generation template .net.
 //                CodeGenerator.generateJavaClassesTemplate(tableName.get(i), colonnes, colonnesType,".cs","Net-template.ftl");
 

@@ -1,4 +1,4 @@
-package com.example.generation.${package};
+package ${package};
 
 <#list columns as column>
      <#if column.imp?has_content>

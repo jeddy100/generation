@@ -1,0 +1,15 @@
+{
+  "int": "int",
+  "int4": "int",
+  "serial": "int",
+  "SMALLINT UNSIGNED": "int",
+  "int8": "int",
+  "bigserial": "int",
+  "varchar": "String",
+  "double precision": "double",
+  "float8": "double",
+  "double": "double",
+  "timestamp": "Timestamp",
+  "date": "Date",
+  "datetime": "Timestamp"
+}

@@ -1,14 +1,12 @@
 package com.example.generation.generation;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.generation.json.Conversion;
 import com.example.generation.json.Type;
 import com.example.generation.main.Main;
 import freemarker.template.Configuration;
@@ -25,62 +23,6 @@ public class CodeGenerator {
     String [] args=Main.getArguments();
 
 
-
-    public static void generateJavaClasses(String tableName, List<String> columns, List<String> columnTypes) {
-
-
-        StringBuilder classCode = new StringBuilder();
-        classCode.append("package ").append(GENERATED_PACKAGE).append(";").append("\n");
-        classCode.append("public class ").append(tableNameToClassName(tableName)).append(" {\n");
-
-        // Générer les champs de classe
-        for (int i = 0; i < columns.size(); i++) {
-            String columnName = columns.get(i);
-            String columnType = columnTypes.get(i);
-            String capitalizedColumn = columnName.substring(0, 1).toUpperCase() + columnName.substring(1);
-
-            classCode.append("\tprivate ").append(mapColumnType(columnType)).append(" ").append(columnName).append(";\n");
-
-            ///////getter
-            classCode.append("\tpublic ").append(mapColumnType(columnType)).append(" get").append(capitalizedColumn).append("() {\n");
-            classCode.append("\t\treturn ").append(columnName).append(";\n");
-            classCode.append("\t}\n");
-
-            /////setter
-            classCode.append("\tpublic void set").append(capitalizedColumn).append("(").append(mapColumnType(columnType)).append(" ").append(columnName).append(") {\n");
-            classCode.append("\t\tthis.").append(columnName).append(" = ").append(columnName).append(";\n");
-            classCode.append("\t}\n");
-
-
-
-        }
-        /////constructeur
-        classCode.append("\tpublic ").append(tableNameToClassName(tableName)).append("(");
-        for (int i = 0; i < columns.size(); i++) {
-            String columnName = columns.get(i);
-            String columnType = columnTypes.get(i);
-            classCode.append(mapColumnType(columnType)).append(" ").append(columnName).append(",");
-
-        }
-        classCode.deleteCharAt(classCode.length()-1);
-        classCode.append(")");
-        classCode.append("\t{").append("\n");
-        for (int i = 0; i < columns.size(); i++) {
-            String columnName = columns.get(i);
-            String columnType = columnTypes.get(i);
-            classCode.append("\tthis.").append(columnName).append(" = ").append(columnName).append(";").append("\n");
-        }
-
-        classCode.append("}").append("\n");
-
-        classCode.append("}");
-
-        // Écrire le code dans un fichier
-        writeToFile(tableNameToClassName(tableName) + ".java", classCode.toString(),GENERATED_PACKAGE);
-
-
-        System.out.println("Generating Java class for table: " + tableName);
-    }
     private static String tableNameToClassName(String tableName) {
         // Transformation du nom de table en un nom de classe Java
         StringBuilder className = new StringBuilder();
@@ -91,27 +33,7 @@ public class CodeGenerator {
         return className.toString();
     }
 
-    private static String mapColumnType(String columnType) {
-        // Mapping des types de colonnes PostgreSQL à des types Java
-        switch (columnType.toLowerCase()) {
-            case "int":
-            case"int4":
-            case "serial":
-                return "int";
-            case "varchar":
-                return "String";
-            case "double precision":
-            case "double":
-                return"double";
-            case "timestamp":
-                return"Timestamp";
-            case"date":
-                return "Date";
-            // Ajoutez d'autres cas selon vos besoins
-            default:
-                return "Object"; // Ou ajustez selon votre logique
-        }
-    }
+
     private static void writeToFile(String fileName, String content,String GENERATED_PACKAGE) {
         try {
             // Créer le répertoire du package s'il n'existe pas
@@ -130,50 +52,6 @@ public class CodeGenerator {
             e.printStackTrace();
         }
     }
-
-    /////////genereation code repository
-    public static void generateJavaRepository(String tableName) {
-
-        StringBuilder classCode = new StringBuilder();
-        classCode.append("package ").append(GENERATED_PACKAGE_REPOSITORY).append(";").append("\n");
-
-        classCode.append("public interface ").append(tableNameToClassName(tableName)).append("Repository").append(" extends JpaRepository<").append(tableNameToClassName(tableName)).append(">").append(" {\n");
-        classCode.append("}\n");
-        // Écrire le code dans un fichier
-        writeToFile("Repository"+ tableNameToClassName(tableName) + ".java", classCode.toString(),GENERATED_PACKAGE_REPOSITORY);
-
-
-        System.out.println("Generating Java repository for table: " + tableName);
-
-    }
-
-    public static void generateJavaService(String tableName) {
-
-        StringBuilder classCode = new StringBuilder();
-        classCode.append("package ").append(GENERATED_PACKAGE_SERVICE).append(";").append("\n");
-        classCode.append("public class ").append(tableNameToClassName(tableName)).append("Service").append(" {\n");
-        classCode.append("}\n");
-
-        writeToFile("Service"+ tableNameToClassName(tableName) + ".java", classCode.toString(),GENERATED_PACKAGE_SERVICE);
-
-
-        System.out.println("Generating Java service for table: " + tableName);
-
-    }
-
-    public static void generateJavaController(String tableName) {
-        StringBuilder classCode =  new StringBuilder();
-        classCode.append("package ").append(GENERATED_PACKAGE_CONTROLLER).append(";").append("\n");
-        classCode.append("public class ").append(tableNameToClassName(tableName)).append("Controller").append(" {\n");
-        classCode.append("}\n");
-
-        writeToFile("Controller"+ tableNameToClassName(tableName) + ".java", classCode.toString(),GENERATED_PACKAGE_CONTROLLER);
-
-
-        System.out.println("Generating Java Controller for table: " + tableName);
-
-    }
-
 
     ////////////////////////////generation code avec template
 
@@ -198,14 +76,14 @@ public class CodeGenerator {
             String [] args=Main.getArguments();
 
             Template template = cfg.getTemplate(templateUsed);
-            String outputPath = args[7]+GENERATED_PACKAGE + File.separator + tableNameToClassName(tableName) + typeFile;
+            String outputPath = args[8]+GENERATED_PACKAGE + File.separator + tableNameToClassName(tableName) + typeFile;
             writeToFiletemplate(outputPath, template, templateData);
             System.out.println(typeFile+" class written to file: " + outputPath);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
     }
-    private static List<ColumnInfo> createColumnInfoList(List<String> columns, List<String> columnTypes) {
+    public static List<ColumnInfo> createColumnInfoList(List<String> columns, List<String> columnTypes) {
         List<ColumnInfo> columnInfoList = new ArrayList<>();
 
         for (int i = 0; i < columns.size(); i++) {
@@ -221,7 +99,7 @@ public class CodeGenerator {
     private static void writeToFiletemplate(String outputPath, Template template, Map<String, Object> templateData)
             throws IOException, TemplateException {
         String [] args=Main.getArguments();
-        File packageDirectory = new File(args[7],GENERATED_PACKAGE);
+        File packageDirectory = new File(args[8],GENERATED_PACKAGE);
         if (!packageDirectory.exists()) {
             packageDirectory.mkdir();
         }
@@ -229,6 +107,166 @@ public class CodeGenerator {
             template.process(templateData, writer);
         }
     }
+
+
+    //////////////Mapping type de colonne conversion
+
+    private static String mapColumnType(String columnType) {
+        Map<String,String> typeMapping= Conversion.GetConversion();
+
+        String javaType = typeMapping.get(columnType.toLowerCase());
+        return (javaType != null) ? javaType : "Object";
+    }
+
+
+
+    ////////////////////generation template .java/////////
+
+    public static void generateJavaClassesTemplate2(String tableName, List<ColumnInfo> columnInfoList,String template,String typefile) {
+        String [] argos=Main.getArguments();
+        String templateContent = readTemplateFromFile(template);
+        String className = tableNameToClassName(tableName);
+        System.out.println(typefile);
+        if (typefile.equals(".java")){
+            String packageDeclaration = "package " + GENERATED_PACKAGE + ";";
+            String importDeclaration = generateImportDeclarations(columnInfoList);
+            String columnTypeDeclarations = generateColumnTypeDeclarations(columnInfoList);
+            String getterSetters = generateGetterSetters(columnInfoList);
+            Map<String, Object> templateData = new HashMap<>();
+            templateData.put("package", packageDeclaration);
+            templateData.put("import", importDeclaration);
+            templateData.put("class", className);
+            templateData.put("columntype", columnTypeDeclarations);
+            templateData.put("columnname", ""); // Placeholder for column names, you can modify this
+            templateData.put("getter", getterSetters);
+            templateData.put("setter", ""); // Placeholder for setters, you can modify this
+
+            // Write the code to a file
+            String outputPath = argos[8] + GENERATED_PACKAGE + File.separator + tableNameToClassName(tableName) + typefile;
+            try {
+                writeToFile(outputPath, templateContent, templateData);
+                System.out.println("Java class written to file: " + outputPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (typefile.equals(".cs"))
+        {
+            String packageDeclaration = "namespace " + GENERATED_PACKAGE + ";";
+            String importDeclaration = generateImportDeclarationsDotnet(columnInfoList);
+            String columnTypeDeclarations = generateColumnTypeDeclarationsDotnet(columnInfoList);
+            Map<String, Object> templateData = new HashMap<>();
+            templateData.put("package", packageDeclaration);
+            templateData.put("import", importDeclaration);
+            templateData.put("class", className);
+            templateData.put("columntype", columnTypeDeclarations);
+            templateData.put("columnname", ""); // Placeholder for column names, you can modify this
+            templateData.put("getter", "");
+            templateData.put("setter", ""); // Placeholder for setters, you can modify this
+
+            // Write the code to a file
+            String outputPath = argos[8] + GENERATED_PACKAGE + File.separator + tableNameToClassName(tableName) + typefile;
+            try {
+                writeToFile(outputPath, templateContent, templateData);
+                System.out.println("Dotnet class written to file: " + outputPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+        // Replace placeholders in the template
+
+    }
+
+    private static String generateImportDeclarations(List<ColumnInfo> columnInfoList) {
+        StringBuilder importDeclarations = new StringBuilder();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            if (columnInfo.getImp() != null && !columnInfo.getImp().isEmpty()) {
+                importDeclarations.append("import ").append(columnInfo.getImp()).append(";\n");
+            }
+        }
+        return importDeclarations.toString();
+    }
+    private static String generateImportDeclarationsDotnet(List<ColumnInfo> columnInfoList) {
+        StringBuilder importDeclarations = new StringBuilder();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            if (columnInfo.getImp() != null && !columnInfo.getImp().isEmpty()) {
+                importDeclarations.append("using ").append(columnInfo.getImp()).append(";\n");
+            }
+        }
+        return importDeclarations.toString();
+    }
+
+    private static String generateColumnTypeDeclarations(List<ColumnInfo> columnInfoList) {
+        StringBuilder declarations = new StringBuilder();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            declarations.append("\t").append(columnInfo.getType()).append(" ").append(columnInfo.getName()).append(";\n");
+        }
+        return declarations.toString();
+    }
+    private static String generateColumnTypeDeclarationsDotnet(List<ColumnInfo> columnInfoList) {
+        StringBuilder declarations = new StringBuilder();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            declarations.append("\t").append(columnInfo.getType()).append(" ").append(columnInfo.getName()).append(" ").append("{get ;set }").append(";\n");
+        }
+        return declarations.toString();
+    }
+
+    private static String generateGetterSetters(List<ColumnInfo> columnInfoList) {
+        StringBuilder getterSetters = new StringBuilder();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            String capitalizedColumn = columnInfo.getCapitalizedName();
+
+            // Getter
+            getterSetters.append("\tpublic ").append(columnInfo.getType()).append(" get").append(capitalizedColumn).append("() {\n");
+            getterSetters.append("\t\treturn ").append(columnInfo.getName()).append(";\n");
+            getterSetters.append("\t}\n");
+
+            // Setter
+            getterSetters.append("\tpublic void set").append(capitalizedColumn).append("(")
+                    .append(columnInfo.getType()).append(" ").append(columnInfo.getName()).append(") {\n");
+            getterSetters.append("\t\tthis.").append(columnInfo.getName()).append(" = ").append(columnInfo.getName()).append(";\n");
+            getterSetters.append("\t}\n");
+        }
+        return getterSetters.toString();
+    }
+
+    private static void writeToFile(String outputPath, String templateContent, Map<String, Object> templateData)
+            throws IOException {
+        String [] args = Main.getArguments();
+        File packageDirectory = new File(args[8], GENERATED_PACKAGE);
+        if (!packageDirectory.exists()) {
+            packageDirectory.mkdir();
+        }
+
+        try (FileWriter writer = new FileWriter(new File(outputPath))) {
+            // Replace placeholders in the template content
+            for (Map.Entry<String, Object> entry : templateData.entrySet()) {
+                String placeholder = "#" + entry.getKey() + "#";
+                String replacement = entry.getValue().toString();
+                templateContent = templateContent.replace(placeholder, replacement);
+            }
+
+            writer.write(templateContent);
+        }
+    }
+    private static String readTemplateFromFile(String fileName) {
+        StringBuilder content = new StringBuilder();
+        try (InputStream is = CodeGenerator.class.getResourceAsStream("/templates/" + fileName);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content.toString();
+    }
+
+
 
 
 
